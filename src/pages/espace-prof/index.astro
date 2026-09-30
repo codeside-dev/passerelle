@@ -1,0 +1,147 @@
+---
+import Espace from "../../layouts/Espace.astro";
+import Carte from "../../components/Carte.astro";
+import Pastille from "../../components/Pastille.astro";
+
+const chiffres = [
+  { titre: "REVENUS DU MOIS", valeur: "1 240 €", detail: "18 séances · +12 %" },
+  { titre: "SÉANCES À VENIR", valeur: "7", detail: "dont 3 cette semaine" },
+  { titre: "ÉLÈVES SUIVIS", valeur: "12", detail: "4 nouveaux ce mois" },
+  { titre: "NOTE MOYENNE", valeur: "4,9 / 5", detail: "sur 128 avis" },
+];
+
+const seances = [
+  { heure: "17h – 18h", initiales: "AT", eleve: "Adam T.", cours: "Fonctions et dérivées" },
+  { heure: "18h – 19h", initiales: "LM", eleve: "Léa M.", cours: "Suites et probabilités" },
+  { heure: "19h – 20h", initiales: "NB", eleve: "Nour B.", cours: "Fonctions et dérivées" },
+];
+
+const demandes = [
+  { initiales: "HP", eleve: "Hugo P.", cours: "Fonctions et dérivées", quand: "" },
+  { initiales: "IK", eleve: "Inès K.", cours: "Suites et probabilités", quand: "10, 11h" },
+];
+
+const creneaux = [
+  { jour: "Mercredi 7 octobre", plage: "14h – 15h · 16h – 17h" },
+  { jour: "Jeudi 8 octobre", plage: "10h – 11h" },
+  { jour: "Vendredi 9 octobre", plage: "17h – 18h" },
+];
+---
+
+<Espace
+  espace="prof"
+  actif="tableau-de-bord"
+  titre="Tableau de bord"
+  sousTitre="Mardi 6 octobre"
+  titrePage="Tableau de bord"
+>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-[24px] font-bold tracking-[-0.5px]">Bonjour Claire,</h1>
+    <p class="text-sm text-[var(--color-muted)]">
+      Trois séances aujourd'hui, deux demandes à valider.
+    </p>
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    {
+      chiffres.map((c) => (
+        <Carte>
+          <p class="font-mono text-[11px] font-semibold tracking-[1px] text-[var(--color-muted)]">
+            {c.titre}
+          </p>
+          <p class="text-[30px] font-bold tracking-[-1px]">{c.valeur}</p>
+          <p class="text-[13px] text-[var(--color-muted)]">{c.detail}</p>
+        </Carte>
+      ))
+    }
+  </div>
+
+  <div class="grid gap-5 lg:grid-cols-[1fr_340px]">
+    <Carte titre="Séances du jour · mardi 6 octobre">
+      <ul class="flex flex-col">
+        {
+          seances.map((s, i) => (
+            <li
+              class={`flex flex-wrap items-center gap-x-4 gap-y-3 py-3.5 ${i > 0 ? "border-t border-[var(--color-line)]" : ""}`}
+            >
+              <span class="w-[90px] font-mono text-sm font-semibold">{s.heure}</span>
+              <Pastille initiales={s.initiales} />
+              <span class="flex min-w-[150px] flex-1 flex-col">
+                <span class="text-[15px] font-semibold">{s.eleve}</span>
+                <span class="text-[13px] text-[var(--color-muted)]">{s.cours}</span>
+              </span>
+              <button
+                type="button"
+                class="rounded-[10px] bg-[var(--color-accent)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:brightness-110"
+              >
+                Rejoindre
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </Carte>
+
+    <Carte titre="Demandes en attente">
+      <ul class="flex flex-col gap-3">
+        {
+          demandes.map((d) => (
+            <li class="flex flex-wrap items-center gap-3 rounded-[10px] bg-[var(--color-alt)] px-3.5 py-3">
+              <Pastille initiales={d.initiales} classe="size-9 text-xs" />
+              <span class="flex min-w-[110px] flex-1 flex-col">
+                <span class="text-sm font-semibold">{d.eleve}</span>
+                <span class="text-xs text-[var(--color-muted)]">
+                  {d.cours}
+                  {d.quand ? ` · ${d.quand}` : ""}
+                </span>
+              </span>
+              <button
+                type="button"
+                class="rounded-[10px] bg-[var(--color-accent)] px-4 py-2 text-xs font-semibold text-white transition hover:brightness-110"
+              >
+                Accepter
+              </button>
+              <button
+                type="button"
+                class="rounded-[10px] border border-[var(--color-line)] bg-white px-4 py-2 text-xs font-semibold transition hover:border-[var(--color-ink)]"
+              >
+                Refuser
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </Carte>
+  </div>
+
+  <div class="grid gap-5 lg:grid-cols-[1fr_340px]">
+    <Carte titre="Prochains créneaux ouverts">
+      <ul class="flex flex-col gap-2.5">
+        {
+          creneaux.map((c) => (
+            <li class="flex flex-wrap items-center justify-between gap-2 rounded-[10px] bg-[var(--color-alt)] px-4 py-3">
+              <span class="text-sm font-semibold">{c.jour}</span>
+              <span class="font-mono text-[13px] text-[var(--color-muted)]">{c.plage}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </Carte>
+
+    <Carte titre="Ouvrir des créneaux">
+      <p class="text-sm leading-relaxed text-[var(--color-muted)]">
+        Ajoutez vos disponibilités : les élèves réservent directement.
+      </p>
+      <div class="flex flex-wrap gap-2.5">
+        <span class="rounded-[10px] bg-[var(--color-alt)] px-4 py-2.5 text-[13px]">Mercredi 7 octobre</span>
+        <span class="rounded-[10px] bg-[var(--color-alt)] px-4 py-2.5 text-[13px]">15h – 16h</span>
+      </div>
+      <button
+        type="button"
+        class="self-start rounded-[10px] bg-[var(--color-accent)] px-5 py-3 text-[13px] font-semibold text-white transition hover:brightness-110"
+      >
+        Ouvrir ce créneau
+      </button>
+    </Carte>
+  </div>
+</Espace>

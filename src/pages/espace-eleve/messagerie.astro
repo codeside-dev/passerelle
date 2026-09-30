@@ -1,0 +1,95 @@
+---
+import Espace from "../../layouts/Espace.astro";
+import Carte from "../../components/Carte.astro";
+import Pastille from "../../components/Pastille.astro";
+
+const conversations = [
+  { initiales: "SR", nom: "Sofia Renard", apercu: "Votre plan de dissertation est solide…", quand: "2 h" },
+  { initiales: "CF", nom: "Claire Fontaine", apercu: "Bien joué pour aujourd'hui…", quand: "hier" },
+  { initiales: "YB", nom: "Yanis Belkacem", apercu: "Le chapitre 4 sera vu la prochaine fois.", quand: "lun." },
+];
+
+const fil = [
+  { de: "moi", texte: "J'ai retravaillé l'introduction comme vous l'aviez dit. Est-ce que la deuxième partie tient debout ?", quand: "il y a 3 heures" },
+  { de: "lui", texte: "Votre plan de dissertation est solide. Retravaillez surtout la deuxième partie, c'est là que le raisonnement se relâche.", quand: "il y a 2 heures" },
+];
+---
+
+<Espace
+  espace="eleve"
+  actif="messagerie"
+  titre="Messagerie"
+  sousTitre="Trois conversations"
+  titrePage="Messagerie"
+>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-[24px] font-bold tracking-[-0.5px]">Messagerie</h1>
+    <p class="text-sm text-[var(--color-muted)]">Trois conversations, un message non lu.</p>
+  </div>
+
+  <div class="grid gap-5 lg:grid-cols-[310px_1fr]">
+    <Carte titre="Conversations">
+      <ul class="flex flex-col gap-3">
+        {
+          conversations.map((c, i) => (
+            <li class={`flex items-start gap-3 ${i > 0 ? "border-t border-[var(--color-line)] pt-3" : ""}`}>
+              <Pastille initiales={c.initiales} classe="size-9 text-xs" />
+              <span class="flex min-w-0 flex-1 flex-col">
+                <span class="flex items-baseline justify-between gap-2">
+                  <span class="text-sm font-semibold">{c.nom}</span>
+                  <span class="font-mono text-[11px] text-[var(--color-muted)]">{c.quand}</span>
+                </span>
+                <span class="truncate text-[13px] text-[var(--color-muted)]">{c.apercu}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </Carte>
+
+    <Carte classe="gap-5">
+      <div class="flex items-center gap-3 border-b border-[var(--color-line)] pb-4">
+        <Pastille initiales="SR" classe="size-9 text-xs" />
+        <span class="flex flex-col">
+          <span class="text-[15px] font-semibold">Sofia Renard</span>
+          <span class="text-xs text-[var(--color-muted)]">Français · Première</span>
+        </span>
+      </div>
+
+      <ul class="flex flex-col gap-4">
+        {
+          fil.map((m) => (
+            <li class={m.de === "moi" ? "flex flex-col items-end gap-1" : "flex flex-col items-start gap-1"}>
+              <p
+                class={
+                  m.de === "moi"
+                    ? "max-w-[78%] rounded-2xl bg-[var(--color-accent)] px-4 py-3 text-sm text-white"
+                    : "max-w-[78%] rounded-2xl border border-[var(--color-line)] px-4 py-3 text-sm"
+                }
+              >
+                {m.texte}
+              </p>
+              <span class="font-mono text-[11px] text-[var(--color-muted)]">{m.quand}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <form class="flex flex-wrap items-center gap-3 border-t border-[var(--color-line)] pt-4">
+        <label for="message" class="sr-only">Écrire un message</label>
+        <input
+          id="message"
+          type="text"
+          placeholder="Écrire un message…"
+          class="min-w-[200px] flex-1 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-alt)] px-4 py-3 text-sm"
+        />
+        <button
+          type="button"
+          class="rounded-[10px] bg-[var(--color-accent)] px-5 py-3 text-[13px] font-semibold text-white transition hover:brightness-110"
+        >
+          Envoyer
+        </button>
+      </form>
+    </Carte>
+  </div>
+</Espace>

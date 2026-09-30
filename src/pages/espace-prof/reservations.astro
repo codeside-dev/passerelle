@@ -1,0 +1,128 @@
+---
+import Espace from "../../layouts/Espace.astro";
+import Carte from "../../components/Carte.astro";
+import Pastille from "../../components/Pastille.astro";
+
+const journees = [
+  {
+    jour: "Mardi 6 octobre",
+    seances: [
+      { heure: "17h – 18h", initiales: "AT", eleve: "Adam T.", cours: "Fonctions et dérivées" },
+      { heure: "18h – 19h", initiales: "LM", eleve: "Léa M.", cours: "Suites et probabilités" },
+      { heure: "19h – 20h", initiales: "NB", eleve: "Nour B.", cours: "Fonctions et dérivées" },
+    ],
+  },
+  {
+    jour: "Mercredi 7 octobre",
+    seances: [
+      { heure: "14h – 15h", initiales: "HP", eleve: "Hugo P.", cours: "Fonctions et dérivées" },
+    ],
+  },
+];
+
+const aValider = [
+  { initiales: "HP", eleve: "Hugo P.", cours: "Fonctions et dérivées", quand: "" },
+  { initiales: "IK", eleve: "Inès K.", cours: "Suites et probabilités", quand: "10, 11h" },
+];
+
+const refusees = [{ texte: "Marc D. · Vendredi 9, 20h", motif: "Indisponible" }];
+---
+
+<Espace
+  espace="prof"
+  actif="reservations"
+  titre="Réservations"
+  sousTitre="Semaine du 6 au 12 octobre"
+  titrePage="Réservations"
+>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-[24px] font-bold tracking-[-0.5px]">Réservations</h1>
+    <p class="text-sm text-[var(--color-muted)]">
+      Planning de la semaine et demandes à traiter.
+    </p>
+  </div>
+
+  <div class="grid gap-5 lg:grid-cols-[1fr_340px]">
+    <Carte classe="gap-5">
+      {
+        journees.map((j, index) => (
+          <div class="flex flex-col gap-3">
+            <p class="font-mono text-[11px] font-semibold tracking-[1px] text-[var(--color-muted)]">
+              {j.jour.toUpperCase()}
+            </p>
+            <ul class="flex flex-col">
+              {j.seances.map((s, i) => (
+                <li
+                  class={`flex flex-wrap items-center gap-x-4 gap-y-3 py-3.5 ${i > 0 ? "border-t border-[var(--color-line)]" : ""}`}
+                >
+                  <span class="w-[90px] font-mono text-sm font-semibold">{s.heure}</span>
+                  <Pastille initiales={s.initiales} />
+                  <span class="flex min-w-[150px] flex-1 flex-col">
+                    <span class="text-[15px] font-semibold">{s.eleve}</span>
+                    <span class="text-[13px] text-[var(--color-muted)]">{s.cours}</span>
+                  </span>
+                  <button
+                    type="button"
+                    class="rounded-[10px] bg-[var(--color-accent)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:brightness-110"
+                  >
+                    Rejoindre
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </Carte>
+
+    <div class="flex flex-col gap-5">
+      <Carte titre="À valider">
+        <ul class="flex flex-col gap-3">
+          {
+            aValider.map((d) => (
+              <li class="flex flex-col gap-3 rounded-[10px] bg-[var(--color-alt)] px-3.5 py-3">
+                <span class="flex items-center gap-3">
+                  <Pastille initiales={d.initiales} classe="size-9 text-xs" />
+                  <span class="flex min-w-0 flex-1 flex-col">
+                    <span class="text-sm font-semibold">{d.eleve}</span>
+                    <span class="text-xs text-[var(--color-muted)]">
+                      {d.cours}
+                      {d.quand ? ` · ${d.quand}` : ""}
+                    </span>
+                  </span>
+                </span>
+                <span class="flex gap-2.5">
+                  <button
+                    type="button"
+                    class="rounded-[10px] bg-[var(--color-accent)] px-4 py-2 text-xs font-semibold text-white transition hover:brightness-110"
+                  >
+                    Accepter
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded-[10px] border border-[var(--color-line)] bg-white px-4 py-2 text-xs font-semibold transition hover:border-[var(--color-ink)]"
+                  >
+                    Refuser
+                  </button>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </Carte>
+
+      <Carte titre="Refusées récemment">
+        <ul class="flex flex-col gap-2.5">
+          {
+            refusees.map((r) => (
+              <li class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-[13px]">{r.texte}</span>
+                <span class="font-mono text-xs text-[var(--color-muted)]">{r.motif}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </Carte>
+    </div>
+  </div>
+</Espace>

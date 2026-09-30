@@ -1,0 +1,23 @@
+---
+interface Props {
+  /** Sur-titre en majuscules, facon etiquette. */
+  titre?: string;
+  /** Classes de mise en page ajoutees a la carte. */
+  classe?: string;
+}
+
+const { titre, classe = "" } = Astro.props;
+---
+
+<section
+  class={`flex flex-col gap-3.5 rounded-2xl border border-[var(--color-line)] bg-white p-[22px] ${classe}`}
+>
+  {
+    titre && (
+      <p class="font-mono text-[11px] font-semibold tracking-[1px] text-[var(--color-muted)]">
+        {titre.toUpperCase()}
+      </p>
+    )
+  }
+  <slot />
+</section>

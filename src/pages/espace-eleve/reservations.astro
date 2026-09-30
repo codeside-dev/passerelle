@@ -1,0 +1,72 @@
+---
+import Espace from "../../layouts/Espace.astro";
+import Carte from "../../components/Carte.astro";
+
+const aVenir = [
+  { jour: "Mardi 6 octobre", heure: "18h – 19h", titre: "Fonctions et dérivées", prof: "Claire Fontaine", etat: "Confirmé" },
+  { jour: "Jeudi 8 octobre", heure: "17h – 18h", titre: "Ondes et signaux", prof: "Yanis Belkacem", etat: "Confirmé" },
+];
+
+const passees = [
+  { jour: "Lundi 29 septembre", heure: "18h – 19h", titre: "Suites et probabilités", prof: "Claire Fontaine", etat: "Terminé" },
+  { jour: "Jeudi 25 septembre", heure: "17h – 18h", titre: "Dissertation : construire un plan", prof: "Sofia Renard", etat: "Terminé" },
+  { jour: "Mardi 23 septembre", heure: "19h – 20h", titre: "Anglais à l'oral", prof: "Inès Bakri", etat: "Annulé" },
+];
+
+const classeEtat = (etat: string) =>
+  etat === "Confirmé"
+    ? "bg-[var(--color-accent-pale)] text-[var(--color-accent)]"
+    : etat === "Terminé"
+      ? "bg-[var(--color-alt)] text-[var(--color-muted)]"
+      : "bg-[#fdecec] text-[#b42318]";
+---
+
+<Espace
+  espace="eleve"
+  actif="reservations"
+  titre="Mes réservations"
+  sousTitre="À venir et passées"
+  titrePage="Mes réservations"
+>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-[24px] font-bold tracking-[-0.5px]">Mes réservations</h1>
+    <p class="text-sm text-[var(--color-muted)]">
+      Deux cours à venir, onze séances passées.
+    </p>
+  </div>
+
+  {
+    [
+      { titre: "À venir", lignes: aVenir },
+      { titre: "Passées", lignes: passees },
+    ].map((groupe) => (
+      <Carte titre={groupe.titre}>
+        <ul class="flex flex-col">
+          {groupe.lignes.map((l, i) => (
+            <li
+              class={`flex flex-wrap items-center gap-x-4 gap-y-3 py-3.5 ${i > 0 ? "border-t border-[var(--color-line)]" : ""}`}
+            >
+              <span class="flex w-[165px] flex-col">
+                <span class="text-sm font-semibold">{l.jour}</span>
+                <span class="font-mono text-xs text-[var(--color-muted)]">{l.heure}</span>
+              </span>
+              <span class="flex min-w-[160px] flex-1 flex-col">
+                <span class="text-[15px] font-semibold">{l.titre}</span>
+                <span class="text-[13px] text-[var(--color-muted)]">{l.prof}</span>
+              </span>
+              <span class={`rounded-full px-3 py-1 text-xs font-semibold ${classeEtat(l.etat)}`}>
+                {l.etat}
+              </span>
+              <button
+                type="button"
+                class="rounded-[10px] bg-[var(--color-accent)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:brightness-110"
+              >
+                Détails
+              </button>
+            </li>
+          ))}
+        </ul>
+      </Carte>
+    ))
+  }
+</Espace>

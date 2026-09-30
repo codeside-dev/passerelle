@@ -1,0 +1,109 @@
+---
+import Espace from "../../layouts/Espace.astro";
+import Carte from "../../components/Carte.astro";
+import Pastille from "../../components/Pastille.astro";
+
+const champs = [
+  { label: "Prénom", valeur: "Adam", type: "text" },
+  { label: "Nom", valeur: "T.", type: "text" },
+  { label: "Adresse électronique", valeur: "adam.t@exemple.fr", type: "email" },
+  { label: "Téléphone", valeur: "06 12 34 56 78", type: "tel" },
+  { label: "Niveau scolaire", valeur: "Première générale", type: "text" },
+  { label: "Établissement", valeur: "Lycée Saint-Exupéry, Lyon", type: "text" },
+];
+
+const matieres = [
+  { sigle: "Σ", nom: "Mathématiques", prof: "Claire Fontaine", seances: "8 séances" },
+  { sigle: "ƒx", nom: "Physique-Chimie", prof: "Yanis Belkacem", seances: "4 séances" },
+  { sigle: "ƒ", nom: "Français", prof: "Sofia Renard", seances: "6 séances" },
+  { sigle: "En", nom: "Anglais", prof: "Inès Bakri", seances: "2 séances" },
+];
+
+const notifications = [
+  { libelle: "Rappel de cours", etat: "Activé" },
+  { libelle: "Nouveaux messages", etat: "Activé" },
+  { libelle: "Lettre d'information", etat: "Désactivé" },
+];
+---
+
+<Espace
+  espace="eleve"
+  actif="profil"
+  titre="Profil"
+  sousTitre="Informations et préférences"
+  titrePage="Profil"
+>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-[24px] font-bold tracking-[-0.5px]">Profil</h1>
+    <p class="text-sm text-[var(--color-muted)]">Vos informations et vos préférences.</p>
+  </div>
+
+  <div class="grid gap-5 lg:grid-cols-[1fr_340px]">
+    <Carte titre="Identité" classe="gap-5">
+      <div class="grid gap-4 md:grid-cols-2">
+        {
+          champs.map((c) => (
+            <div class="flex flex-col gap-1.5">
+              <label for={c.label} class="text-[13px] text-[var(--color-muted)]">
+                {c.label}
+              </label>
+              <input
+                id={c.label}
+                type={c.type}
+                value={c.valeur}
+                class="rounded-[10px] border border-[var(--color-line)] bg-[var(--color-alt)] px-4 py-3 text-sm"
+              />
+            </div>
+          ))
+        }
+      </div>
+      <button
+        type="button"
+        class="self-start rounded-[10px] bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-white transition hover:brightness-110"
+      >
+        Enregistrer
+      </button>
+    </Carte>
+
+    <div class="flex flex-col gap-5">
+      <Carte titre="Matières suivies">
+        <ul class="flex flex-col gap-4">
+          {
+            matieres.map((m) => (
+              <li class="flex items-center gap-3">
+                <Pastille initiales={m.sigle} classe="size-8 font-mono text-[11px]" />
+                <span class="flex flex-col">
+                  <span class="text-sm font-semibold">{m.nom}</span>
+                  <span class="text-xs text-[var(--color-muted)]">
+                    {m.prof} · {m.seances}
+                  </span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </Carte>
+
+      <Carte titre="Notifications">
+        <ul class="flex flex-col gap-3">
+          {
+            notifications.map((n) => (
+              <li class="flex items-center justify-between gap-3">
+                <span class="text-sm">{n.libelle}</span>
+                <span
+                  class={
+                    n.etat === "Activé"
+                      ? "rounded-full bg-[var(--color-accent-pale)] px-3 py-1 text-xs font-semibold text-[var(--color-accent)]"
+                      : "rounded-full bg-[var(--color-alt)] px-3 py-1 text-xs font-semibold text-[var(--color-muted)]"
+                  }
+                >
+                  {n.etat}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </Carte>
+    </div>
+  </div>
+</Espace>

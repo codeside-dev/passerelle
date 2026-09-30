@@ -1,0 +1,14 @@
+---
+interface Props {
+  initiales: string;
+  /** Taille et corps de police : classes Tailwind litterales. */
+  classe?: string;
+}
+
+const { initiales, classe = "size-[34px] text-[13px]" } = Astro.props;
+---
+
+<span
+  class={`grid shrink-0 place-items-center rounded-[10px] bg-[var(--color-accent-pale)] font-bold text-[var(--color-accent)] ${classe}`}
+  aria-hidden="true">{initiales}</span
+>

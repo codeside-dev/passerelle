@@ -1,0 +1,122 @@
+---
+import Espace from "../../layouts/Espace.astro";
+import Carte from "../../components/Carte.astro";
+import Pastille from "../../components/Pastille.astro";
+
+const cours = [
+  { jour: "Mardi 6 octobre", heure: "18h – 19h", titre: "Fonctions et dérivées", prof: "Claire Fontaine", initiales: "CF" },
+  { jour: "Jeudi 8 octobre", heure: "17h – 18h", titre: "Ondes et signaux", prof: "Yanis Belkacem", initiales: "YB" },
+  { jour: "Samedi 10 octobre", heure: "10h – 11h", titre: "Anglais à l'oral", prof: "Inès Bakri", initiales: "IB" },
+];
+
+/* Largeurs ecrites en classes litterales : Tailwind ne detecte pas les valeurs
+   construites a l'execution. */
+const progression = [
+  { matiere: "Mathématiques", valeur: "72 %", classe: "w-[72%]" },
+  { matiere: "Physique-Chimie", valeur: "58 %", classe: "w-[58%]" },
+  { matiere: "Français", valeur: "84 %", classe: "w-[84%]" },
+  { matiere: "Anglais", valeur: "45 %", classe: "w-[45%]" },
+];
+
+const raccourcis = [
+  { titre: "Fiches de révision", detail: "128 documents" },
+  { titre: "Exercices corrigés", detail: "à votre niveau" },
+  { titre: "Mes professeurs", detail: "4 en suivi" },
+];
+---
+
+<Espace
+  espace="eleve"
+  actif="tableau-de-bord"
+  titre="Tableau de bord"
+  sousTitre="Semaine du 6 au 12 octobre"
+  titrePage="Tableau de bord"
+>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-[24px] font-bold tracking-[-0.5px]">Bonjour Adam,</h1>
+    <p class="text-sm text-[var(--color-muted)]">Vous avez deux cours cette semaine.</p>
+  </div>
+
+  <div class="grid gap-5 lg:grid-cols-[1fr_340px]">
+    <Carte titre="Prochains cours">
+      <ul class="flex flex-col">
+        {
+          cours.map((c, i) => (
+            <li
+              class={`flex flex-wrap items-center gap-x-4 gap-y-3 py-3.5 ${i > 0 ? "border-t border-[var(--color-line)]" : ""}`}
+            >
+              <span class="flex w-[150px] flex-col">
+                <span class="text-sm font-semibold">{c.jour}</span>
+                <span class="font-mono text-xs text-[var(--color-muted)]">{c.heure}</span>
+              </span>
+              <span class="flex min-w-[160px] flex-1 flex-col">
+                <span class="text-[15px] font-semibold">{c.titre}</span>
+                <span class="text-[13px] text-[var(--color-muted)]">{c.prof}</span>
+              </span>
+              <Pastille initiales={c.initiales} />
+              <button
+                type="button"
+                class="rounded-[10px] bg-[var(--color-accent)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:brightness-110"
+              >
+                Rejoindre
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </Carte>
+
+    <Carte titre="Message non lu">
+      <div class="flex items-center gap-3">
+        <Pastille initiales="SR" classe="size-9 text-xs" />
+        <span class="flex flex-col">
+          <span class="text-[15px] font-semibold">Sofia Renard</span>
+          <span class="text-xs text-[var(--color-muted)]">il y a 2 heures</span>
+        </span>
+      </div>
+      <p class="text-sm leading-relaxed text-[var(--color-muted)]">
+        Votre plan de dissertation est solide. Retravaillez surtout la deuxième
+        partie, c'est là que le raisonnement se relâche.
+      </p>
+      <button
+        type="button"
+        class="rounded-[10px] bg-[var(--color-accent)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:brightness-110"
+      >
+        Répondre
+      </button>
+    </Carte>
+  </div>
+
+  <div class="grid gap-5 lg:grid-cols-[1fr_340px]">
+    <Carte titre="Progression par matière">
+      <ul class="flex flex-col gap-3">
+        {
+          progression.map((p) => (
+            <li class="flex flex-col gap-1.5">
+              <span class="flex items-center justify-between text-sm">
+                <span class="font-semibold">{p.matiere}</span>
+                <span class="font-mono text-[var(--color-muted)]">{p.valeur}</span>
+              </span>
+              <span class="h-1.5 w-full rounded-full bg-[var(--color-line)]">
+                <span class={`block h-full rounded-full bg-[var(--color-accent)] ${p.classe}`} />
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </Carte>
+
+    <Carte titre="Raccourcis">
+      <ul class="flex flex-col gap-2.5">
+        {
+          raccourcis.map((r) => (
+            <li class="flex flex-col rounded-[10px] bg-[var(--color-alt)] px-4 py-3">
+              <span class="text-[15px] font-semibold">{r.titre}</span>
+              <span class="text-xs text-[var(--color-muted)]">{r.detail}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </Carte>
+  </div>
+</Espace>

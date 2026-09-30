@@ -230,6 +230,72 @@ const misEnAvant = cours.slice(0, 3);
     </div>
   </section>
 
+  <section class="bg-[var(--color-fond)]">
+    <div class="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-6 py-[84px] lg:px-[72px]">
+      <div class="flex flex-col gap-3">
+        <p class="font-mono text-xs font-semibold tracking-[1.2px] text-[var(--color-muted)]">
+          APRÈS LA RÉSERVATION
+        </p>
+        <h2 class="max-w-[700px] font-display text-[34px] font-bold leading-[1.12] tracking-[-1.4px] sm:text-[44px]">
+          Chacun a son espace.
+        </h2>
+        <p class="max-w-[640px] text-[17px] leading-[1.55] text-[var(--color-muted)]">
+          L'élève retrouve ses cours, ses ressources et ses échanges. Le
+          professeur gère son planning, ses élèves et ses tarifs. Les deux
+          espaces sont présentés en démonstration.
+        </p>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2">
+        {
+          [
+            {
+              lien: "/espace-eleve/",
+              surtitre: "CÔTÉ ÉLÈVE",
+              titre: "Suivre ses cours",
+              points: [
+                "Le rappel des cours réservés",
+                "Les fiches et exercices corrigés",
+                "La messagerie avec les professeurs",
+              ],
+            },
+            {
+              lien: "/espace-prof/",
+              surtitre: "CÔTÉ PROFESSEUR",
+              titre: "Gérer son activité",
+              points: [
+                "Le planning et les demandes à valider",
+                "Les élèves suivis et les annonces",
+                "Les revenus et les coordonnées de paiement",
+              ],
+            },
+          ].map((espace) => (
+            <a
+              href={espace.lien}
+              class="flex flex-col gap-4 rounded-2xl border border-[var(--color-line)] bg-white p-[28px] transition hover:border-[var(--color-accent)]"
+            >
+              <p class="font-mono text-[11px] font-semibold tracking-[1px] text-[var(--color-muted)]">
+                {espace.surtitre}
+              </p>
+              <p class="font-display text-[24px] font-bold tracking-[-0.6px]">{espace.titre}</p>
+              <ul class="flex flex-col gap-2">
+                {espace.points.map((point) => (
+                  <li class="flex items-start gap-2.5 text-[15px] leading-relaxed text-[var(--color-muted)]">
+                    <span class="mt-[7px] size-1.5 shrink-0 rounded-full bg-[var(--color-accent)]" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+              <span class="mt-1 text-[15px] font-semibold text-[var(--color-accent)]">
+                Voir l'espace →
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
   <section class="bg-[var(--color-alt)]">
     <div class="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-5 px-6 py-[84px] text-center lg:px-[72px]">
       <p class="font-mono text-xs font-semibold tracking-[1.2px] text-[var(--color-muted)]">

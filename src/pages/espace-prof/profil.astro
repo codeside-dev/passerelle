@@ -1,0 +1,155 @@
+---
+import Espace from "../../layouts/Espace.astro";
+import Carte from "../../components/Carte.astro";
+
+const jours = [
+  { nom: "Lundi", actif: false },
+  { nom: "Mardi", actif: true },
+  { nom: "Mercredi", actif: true },
+  { nom: "Jeudi", actif: true },
+  { nom: "Vendredi", actif: true },
+  { nom: "Samedi", actif: true },
+  { nom: "Dimanche", actif: false },
+];
+
+const revenus = [
+  { libelle: "Octobre", valeur: "1 240 €" },
+  { libelle: "Septembre", valeur: "1 108 €" },
+  { libelle: "Prochain versement", valeur: "5 nov." },
+];
+---
+
+<Espace
+  espace="prof"
+  actif="profil"
+  titre="Profil"
+  sousTitre="Présentation et paiement"
+  titrePage="Profil"
+>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-[24px] font-bold tracking-[-0.5px]">Profil</h1>
+    <p class="text-sm text-[var(--color-muted)]">
+      Votre présentation publique et vos préférences.
+    </p>
+  </div>
+
+  <div class="grid gap-5 lg:grid-cols-[1fr_340px]">
+    <Carte titre="Présentation publique" classe="gap-5">
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="flex flex-col gap-1.5">
+          <label for="nom-affiche" class="text-[13px] text-[var(--color-muted)]">Nom affiché</label>
+          <input
+            id="nom-affiche"
+            type="text"
+            value="Claire Fontaine"
+            class="rounded-[10px] border border-[var(--color-line)] bg-[var(--color-alt)] px-4 py-3 text-sm"
+          />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="tarif" class="text-[13px] text-[var(--color-muted)]">Tarif horaire</label>
+          <input
+            id="tarif"
+            type="text"
+            value="32 € / heure"
+            class="rounded-[10px] border border-[var(--color-line)] bg-[var(--color-alt)] px-4 py-3 text-sm"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="presentation" class="text-[13px] text-[var(--color-muted)]">Présentation</label>
+        <textarea
+          id="presentation"
+          rows="4"
+          class="rounded-[10px] border border-[var(--color-line)] bg-[var(--color-alt)] px-4 py-3 text-sm leading-relaxed"
+        >Agrégée de mathématiques, j'enseigne en lycée depuis onze ans. Je privilégie la compréhension du raisonnement plutôt que l'apprentissage par cœur : chaque séance part d'un exercice que l'élève n'a pas su résoudre.</textarea>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <p class="font-mono text-[11px] font-semibold tracking-[1px] text-[var(--color-muted)]">
+          MATIÈRES ENSEIGNÉES
+        </p>
+        <div class="flex flex-wrap items-center justify-between gap-2 rounded-[10px] bg-[var(--color-alt)] px-4 py-3">
+          <span class="text-sm font-semibold">Mathématiques</span>
+          <span class="text-[13px] text-[var(--color-muted)]">Seconde · Première · Terminale</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <p class="font-mono text-[11px] font-semibold tracking-[1px] text-[var(--color-muted)]">
+          DISPONIBILITÉS
+        </p>
+        <div class="flex flex-wrap gap-2">
+          {
+            jours.map((j) => (
+              <span
+                class={
+                  j.actif
+                    ? "rounded-[10px] bg-[var(--color-accent)] px-3.5 py-2 text-[13px] font-semibold text-white"
+                    : "rounded-[10px] border border-[var(--color-line)] px-3.5 py-2 text-[13px] text-[var(--color-muted)]"
+                }
+              >
+                {j.nom}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          type="button"
+          class="rounded-[10px] bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-white transition hover:brightness-110"
+        >
+          Enregistrer
+        </button>
+        <button
+          type="button"
+          class="rounded-[10px] border border-[var(--color-line)] px-6 py-3 text-sm font-semibold transition hover:border-[var(--color-ink)]"
+        >
+          Aperçu public
+        </button>
+      </div>
+    </Carte>
+
+    <div class="flex flex-col gap-5">
+      <Carte titre="Coordonnées de paiement" classe="gap-4">
+        <div class="flex flex-col gap-1.5">
+          <span class="text-[13px] text-[var(--color-muted)]">Titulaire</span>
+          <span class="rounded-[10px] border border-[var(--color-line)] bg-[var(--color-alt)] px-4 py-3 text-sm">
+            Claire Fontaine
+          </span>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <span class="text-[13px] text-[var(--color-muted)]">IBAN</span>
+          <span class="rounded-[10px] border border-[var(--color-line)] bg-[var(--color-alt)] px-4 py-3 font-mono text-sm">
+            FR76 •••• •••• •••• 4821
+          </span>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <span class="text-[13px] text-[var(--color-muted)]">Déclaration d'activité</span>
+          <span class="rounded-[10px] border border-[var(--color-line)] bg-[var(--color-alt)] px-4 py-3 font-mono text-sm">
+            SIRET 812 456 789 00021
+          </span>
+        </div>
+        <p class="rounded-[10px] bg-[var(--color-accent-pale)] px-4 py-3 text-[13px] leading-relaxed">
+          Vos coordonnées ne sont communiquées à personne : les virements sont
+          préparés par la plateforme.
+        </p>
+      </Carte>
+
+      <Carte titre="Revenus">
+        <ul class="flex flex-col gap-3">
+          {
+            revenus.map((r) => (
+              <li class="flex items-center justify-between gap-3">
+                <span class="text-sm">{r.libelle}</span>
+                <span class="font-mono text-sm font-semibold">{r.valeur}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </Carte>
+    </div>
+  </div>
+</Espace>

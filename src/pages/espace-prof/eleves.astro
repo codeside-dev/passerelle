@@ -1,0 +1,64 @@
+---
+import Espace from "../../layouts/Espace.astro";
+import Carte from "../../components/Carte.astro";
+import Pastille from "../../components/Pastille.astro";
+
+const eleves = [
+  { initiales: "AT", nom: "Adam T.", matiere: "Mathématiques · Première", seances: "8 séances", derniere: "28 sept." },
+  { initiales: "LM", nom: "Léa M.", matiere: "Mathématiques · Terminale", seances: "14 séances", derniere: "30 sept." },
+  { initiales: "NB", nom: "Nour B.", matiere: "Mathématiques · Première", seances: "5 séances", derniere: "2 oct." },
+  { initiales: "HP", nom: "Hugo P.", matiere: "Mathématiques · Seconde", seances: "3 séances", derniere: "1 oct." },
+  { initiales: "IK", nom: "Inès K.", matiere: "Mathématiques · Terminale", seances: "11 séances", derniere: "29 sept." },
+  { initiales: "MD", nom: "Marc D.", matiere: "Mathématiques · Première", seances: "6 séances", derniere: "24 sept." },
+];
+---
+
+<Espace
+  espace="prof"
+  actif="eleves"
+  titre="Mes élèves"
+  sousTitre="Douze élèves suivis"
+  titrePage="Mes élèves"
+>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-[24px] font-bold tracking-[-0.5px]">Mes élèves</h1>
+    <p class="text-sm text-[var(--color-muted)]">
+      Douze élèves suivis, quatre nouveaux ce mois-ci.
+    </p>
+  </div>
+
+  <Carte titre="Élèves suivis">
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[620px] border-collapse text-left">
+        <thead>
+          <tr class="border-b border-[var(--color-line)]">
+            {
+              ["Élève", "Matière", "Séances", "Dernière"].map((t) => (
+                <th class="pb-2.5 font-mono text-[11px] font-semibold tracking-[1px] text-[var(--color-muted)]">
+                  {t.toUpperCase()}
+                </th>
+              ))
+            }
+          </tr>
+        </thead>
+        <tbody>
+          {
+            eleves.map((e) => (
+              <tr class="border-b border-[var(--color-line)] last:border-0">
+                <td class="py-3.5">
+                  <span class="flex items-center gap-3">
+                    <Pastille initiales={e.initiales} />
+                    <span class="text-[15px] font-semibold">{e.nom}</span>
+                  </span>
+                </td>
+                <td class="py-3.5 text-sm text-[var(--color-muted)]">{e.matiere}</td>
+                <td class="py-3.5 font-mono text-sm font-semibold">{e.seances}</td>
+                <td class="py-3.5 font-mono text-sm text-[var(--color-muted)]">{e.derniere}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </Carte>
+</Espace>

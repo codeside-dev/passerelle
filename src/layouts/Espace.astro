@@ -1,0 +1,148 @@
+---
+import Base from "./Base.astro";
+import { espaces, autreEspace, type Espace } from "../data/espaces";
+import { marque } from "../data/site";
+
+interface Props {
+  /** Espace affiche : eleve ou prof. */
+  espace: "eleve" | "prof";
+  /** Cle de l'entree de navigation active. */
+  actif: string;
+  /** Titre de la barre haute. */
+  titre: string;
+  /** Sous-titre de la barre haute. */
+  sousTitre: string;
+  /** Titre de l'onglet du navigateur. */
+  titrePage: string;
+}
+
+const { espace, actif, titre, sousTitre, titrePage } = Astro.props;
+
+const courant: Espace = espaces[espace];
+const autre = autreEspace(espace);
+
+/* Initiales en pastille, aux jetons du design. */
+const pastille = (initiales: string, taille = 34) =>
+  `grid size-[${taille}px] shrink-0 place-items-center rounded-[10px] bg-[var(--color-accent-pale)] text-[13px] font-bold text-[var(--color-accent)]`;
+const classePastille = pastille(courant.utilisateur.initiales);
+---
+
+<Base
+  title={`${titre} — ${courant.nom} — ${marque.nom}`}
+  description={`${courant.nom} de démonstration : ${sousTitre}.`}
+>
+  <!--
+    L'espace est une demonstration : le dire en haut de chaque page, avant
+    toute autre chose. Un visiteur ne doit pas croire qu'il est connecte.
+  -->
+  <div class="border-b border-[var(--color-line)] bg-[var(--color-accent-pale)] px-6 py-2.5 text-center lg:px-8">
+    <p class="text-[13px] text-[var(--color-ink)]">
+      <strong class="font-semibold">Espace de démonstration</strong> — aucune
+      donnée réelle, aucun compte. Les noms, tarifs et messages sont des exemples.
+    </p>
+  </div>
+
+  <div class="flex min-h-screen bg-[var(--color-alt)]">
+    <!-- Barre laterale, ecrans larges -->
+    <aside
+      class="hidden w-[248px] shrink-0 flex-col gap-1.5 border-r border-[var(--color-line)] bg-white p-4 lg:flex"
+      aria-label={`Navigation ${courant.nom}`}
+    >
+      <a href="/" class="mb-4 flex items-center gap-2.5 px-1">
+        <span class="grid size-[30px] place-items-center rounded-[9px] bg-[var(--color-accent)] text-[13px] font-bold text-white">
+          {marque.initiale}
+        </span>
+        <span class="text-[18px] font-bold tracking-[-0.4px]">{marque.nom}</span>
+      </a>
+
+      {
+        courant.navigation.map((entree) => (
+          <a
+            href={entree.lien}
+            aria-current={entree.cle === actif ? "page" : undefined}
+            class={
+              entree.cle === actif
+                ? "rounded-[10px] bg-[var(--color-accent-pale)] px-3 py-2.5 text-sm font-semibold text-[var(--color-accent)]"
+                : "rounded-[10px] px-3 py-2.5 text-sm text-[var(--color-muted)] transition hover:bg-[var(--color-alt)] hover:text-[var(--color-ink)]"
+            }
+          >
+            {entree.libelle}
+          </a>
+        ))
+      }
+
+      <div class="mt-auto flex items-center gap-2.5 border-t border-[var(--color-line)] px-1 pt-4">
+        <span class={classePastille}>{courant.utilisateur.initiales}</span>
+        <span class="flex flex-col">
+          <span class="text-[13px] font-semibold">{courant.utilisateur.nom}</span>
+          <span class="text-xs text-[var(--color-muted)]">{courant.utilisateur.role}</span>
+        </span>
+      </div>
+    </aside>
+
+    <div class="flex min-w-0 flex-1 flex-col">
+      <!-- Barre haute : titres a gauche, utilisateur a droite -->
+      <div
+        class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-[var(--color-line)] bg-white px-5 py-3.5 lg:h-[72px] lg:px-8 lg:py-0"
+      >
+        <div class="flex min-w-0 flex-col gap-0.5">
+          <p class="text-[17px] font-bold tracking-[-0.3px] lg:text-[18px]">{titre}</p>
+          <p class="text-[13px] text-[var(--color-muted)]">{sousTitre}</p>
+        </div>
+
+        <!--
+          Nom et role sont deux elements distincts, espaces par la mise en page.
+          Dans la maquette ils etaient colles dans un meme bloc de texte.
+        -->
+        <div class="flex items-center gap-3.5">
+          <span class="flex flex-col items-end">
+            <span class="text-[13px] font-semibold">{courant.utilisateur.nom}</span>
+            <span class="text-xs text-[var(--color-muted)]">{courant.utilisateur.role}</span>
+          </span>
+          <span class="grid size-9 shrink-0 place-items-center rounded-[10px] bg-[var(--color-accent-pale)] text-sm font-bold text-[var(--color-accent)]">
+            {courant.utilisateur.initiales}
+          </span>
+        </div>
+      </div>
+
+      <!--
+        Navigation de l'espace sur mobile : la maquette montrait trois barres
+        qui n'ouvraient rien. Ici les liens sont reellement atteignables.
+      -->
+      <nav
+        class="flex flex-wrap gap-x-4 gap-y-2 border-b border-[var(--color-line)] bg-white px-5 py-3 lg:hidden"
+        aria-label={`Navigation ${courant.nom} sur mobile`}
+      >
+        {
+          courant.navigation.map((entree) => (
+            <a
+              href={entree.lien}
+              aria-current={entree.cle === actif ? "page" : undefined}
+              class={
+                entree.cle === actif
+                  ? "text-[13px] font-semibold text-[var(--color-accent)]"
+                  : "text-[13px] text-[var(--color-muted)]"
+              }
+            >
+              {entree.libelle}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="flex flex-1 flex-col gap-5 px-5 py-6 lg:px-8 lg:py-8">
+        <slot />
+
+        <!-- Passer d'un espace a l'autre, pour la demonstration -->
+        <div class="mt-auto border-t border-[var(--color-line)] pt-5">
+          <a
+            href={autre.navigation[0].lien}
+            class="text-[13px] font-semibold text-[var(--color-accent)] transition hover:underline"
+          >
+            Voir l'{autre.cle === "prof" ? "espace professeur" : "espace élève"} →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>

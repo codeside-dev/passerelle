@@ -1,0 +1,79 @@
+---
+import Espace from "../../layouts/Espace.astro";
+import Carte from "../../components/Carte.astro";
+
+const documents = [
+  { matiere: "MATHÉMATIQUES", titre: "Dérivation : règles et pièges", niveau: "Première", pages: "8 pages" },
+  { matiere: "MATHÉMATIQUES", titre: "Probabilités conditionnelles", niveau: "Terminale", pages: "9 pages" },
+  { matiere: "PHYSIQUE-CHIMIE", titre: "Les ondes mécaniques", niveau: "Première", pages: "6 pages" },
+  { matiere: "ANGLAIS", titre: "L'oral d'anglais : méthode", niveau: "Première", pages: "4 pages" },
+  { matiere: "FRANÇAIS", titre: "Construire un plan de dissertation", niveau: "Première", pages: "5 pages" },
+  { matiere: "HISTOIRE-GÉO", titre: "La composition en histoire", niveau: "Terminale", pages: "7 pages" },
+];
+
+const filtres = ["Toutes les matières", "Seconde", "Première", "Terminale"];
+---
+
+<Espace
+  espace="eleve"
+  actif="ressources"
+  titre="Ressources pédagogiques"
+  sousTitre="Fiches, exercices et annales"
+  titrePage="Ressources pédagogiques"
+>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-[24px] font-bold tracking-[-0.5px]">Ressources pédagogiques</h1>
+    <p class="text-sm text-[var(--color-muted)]">
+      Fiches, exercices corrigés et annales, du collège au lycée.
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-4 rounded-2xl border border-[var(--color-line)] bg-white p-[22px]">
+    <label for="recherche" class="sr-only">Rechercher une ressource</label>
+    <div class="flex flex-wrap items-center gap-3">
+      <input
+        id="recherche"
+        type="search"
+        placeholder="Rechercher une fiche, un chapitre…"
+        class="min-w-[240px] flex-1 rounded-[10px] border border-[var(--color-line)] bg-[var(--color-alt)] px-4 py-3 text-sm"
+      />
+      {
+        filtres.map((f, i) => (
+          <button
+            type="button"
+            aria-pressed={i === 0 ? "true" : "false"}
+            data-filtre={f.toLowerCase().replace(/\s+/g, "-")}
+            class="rounded-full border border-[var(--color-line)] bg-white px-4 py-2 text-[13px] text-[var(--color-muted)] transition hover:text-[var(--color-ink)] aria-pressed:border-transparent aria-pressed:bg-[var(--color-accent-pale)] aria-pressed:font-semibold aria-pressed:text-[var(--color-accent)]"
+          >
+            {f}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="grid gap-5 md:grid-cols-2">
+    {
+      documents.map((d) => (
+        <Carte>
+          <p class="font-mono text-[11px] font-semibold tracking-[1px] text-[var(--color-accent)]">
+            {d.matiere}
+          </p>
+          <h2 class="text-[19px] font-bold tracking-[-0.3px]">{d.titre}</h2>
+          <p class="text-[13px] text-[var(--color-muted)]">
+            {d.niveau} · {d.pages}
+          </p>
+          <p class="mt-1 flex items-center gap-3">
+            <button
+              type="button"
+              class="text-[13px] font-semibold text-[var(--color-accent)] transition hover:underline"
+            >
+              Ouvrir
+            </button>
+            <span class="font-mono text-xs text-[var(--color-muted)]">PDF · 1,2 Mo</span>
+          </p>
+        </Carte>
+      ))
+    }
+  </div>
+</Espace>

@@ -1,0 +1,99 @@
+---
+import Espace from "../../layouts/Espace.astro";
+import Carte from "../../components/Carte.astro";
+import Pastille from "../../components/Pastille.astro";
+
+const documents = [
+  { titre: "Dérivation : règles et pièges", type: "Fiche · 8 pages", initiales: "AT", eleve: "Adam T." },
+  { titre: "Exercices — limites et continuité", type: "Exercices · 12 pages", initiales: "AT", eleve: "Adam T." },
+  { titre: "Annales du bac — suites", type: "Annales · 24 pages", initiales: "LM", eleve: "Léa M." },
+  { titre: "Méthode : rédiger une démonstration", type: "Fiche · 4 pages", initiales: "NB", eleve: "Nour B." },
+];
+
+const destinataires = [
+  { initiales: "AT", nom: "Adam T.", etat: "Sélectionné" },
+  { initiales: "LM", nom: "Léa M.", etat: "Sélectionné" },
+  { initiales: "NB", nom: "Nour B.", etat: "Non" },
+];
+---
+
+<Espace
+  espace="prof"
+  actif="ressources"
+  titre="Ressources"
+  sousTitre="Documents partagés"
+  titrePage="Ressources"
+>
+  <div class="flex flex-col gap-1">
+    <h1 class="text-[24px] font-bold tracking-[-0.5px]">Ressources</h1>
+    <p class="text-sm text-[var(--color-muted)]">Vos documents, et à qui ils sont partagés.</p>
+  </div>
+
+  <div class="grid gap-5 lg:grid-cols-[1fr_340px]">
+    <Carte titre="Documents partagés">
+      <ul class="flex flex-col">
+        {
+          documents.map((d, i) => (
+            <li
+              class={`flex flex-wrap items-center gap-x-4 gap-y-3 py-3.5 ${i > 0 ? "border-t border-[var(--color-line)]" : ""}`}
+            >
+              <span class="flex min-w-[180px] flex-1 flex-col">
+                <span class="text-[15px] font-semibold">{d.titre}</span>
+                <span class="text-[13px] text-[var(--color-muted)]">{d.type}</span>
+              </span>
+              <span class="flex items-center gap-2">
+                <Pastille initiales={d.initiales} classe="size-8 text-[11px]" />
+                <span class="text-[13px] text-[var(--color-muted)]">{d.eleve}</span>
+              </span>
+              <button
+                type="button"
+                class="rounded-[10px] border border-[var(--color-line)] px-4 py-2 text-[13px] font-semibold transition hover:border-[var(--color-ink)]"
+              >
+                Partager
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </Carte>
+
+    <Carte titre="Ajouter un document" classe="gap-5">
+      <div class="flex flex-col items-center gap-1 rounded-[10px] border border-dashed border-[var(--color-line)] px-4 py-6 text-center">
+        <span class="text-[15px] font-semibold">Déposer un fichier</span>
+        <span class="text-xs text-[var(--color-muted)]">PDF, images · 20 Mo maximum</span>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <p class="font-mono text-[11px] font-semibold tracking-[1px] text-[var(--color-muted)]">
+          PARTAGER AVEC
+        </p>
+        <ul class="flex flex-col gap-2.5">
+          {
+            destinataires.map((d) => (
+              <li class="flex items-center gap-2.5">
+                <Pastille initiales={d.initiales} classe="size-8 text-[11px]" />
+                <span class="flex-1 text-sm font-semibold">{d.nom}</span>
+                <span
+                  class={
+                    d.etat === "Sélectionné"
+                      ? "rounded-full bg-[var(--color-accent-pale)] px-3 py-1 text-xs font-semibold text-[var(--color-accent)]"
+                      : "rounded-full bg-[var(--color-alt)] px-3 py-1 text-xs font-semibold text-[var(--color-muted)]"
+                  }
+                >
+                  {d.etat}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <button
+        type="button"
+        class="self-start rounded-[10px] bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-white transition hover:brightness-110"
+      >
+        Envoyer
+      </button>
+    </Carte>
+  </div>
+</Espace>
