@@ -1,0 +1,116 @@
+---
+import Base from "./Base.astro";
+import { marque, navigation, pied } from "../data/site";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Cle de l'entree de navigation a mettre en avant. */
+  actif?: string;
+}
+
+const { title, description, actif } = Astro.props;
+---
+
+<Base title={title} description={description}>
+  <header class="border-b border-[var(--color-line)] bg-[var(--color-fond)]">
+    <div class="mx-auto w-full max-w-[1440px] px-6 lg:px-[72px]">
+      <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4 lg:h-[72px] lg:flex-nowrap lg:py-0">
+        <a href="/" class="flex items-center gap-2.5">
+          <span class="grid size-[30px] place-items-center rounded-[9px] bg-[var(--color-accent)] text-[15px] font-bold text-white">
+            {marque.initiale}
+          </span>
+          <span class="text-[18px] font-bold tracking-[-0.4px]">{marque.nom}</span>
+        </a>
+
+        <nav
+          class="order-3 flex w-full flex-wrap items-center gap-x-6 gap-y-2 lg:order-none lg:w-auto lg:gap-x-[30px]"
+          aria-label="Principale"
+        >
+          {
+            navigation.map((entree) =>
+              entree.lien ? (
+                <a
+                  href={entree.lien}
+                  class={
+                    entree.cle === actif
+                      ? "text-sm font-semibold text-[var(--color-ink)]"
+                      : "text-sm text-[var(--color-muted)] transition hover:text-[var(--color-ink)]"
+                  }
+                >
+                  {entree.libelle}
+                </a>
+              ) : (
+                <span class="text-sm text-[var(--color-muted)]" title="Page à venir">
+                  {entree.libelle}
+                </span>
+              ),
+            )
+          }
+        </nav>
+
+        <div class="flex items-center gap-3.5">
+          <span class="hidden text-sm font-medium sm:inline">Se connecter</span>
+          <a
+            href="/cours"
+            class="rounded-[10px] bg-[var(--color-accent)] px-5 py-[11px] text-sm font-semibold text-white transition hover:brightness-110"
+          >
+            Trouver un cours
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="bg-[var(--color-ink)]">
+    <div class="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-6 py-14 lg:px-[72px]">
+      <div class="flex flex-col justify-between gap-10 lg:flex-row">
+        <div class="flex max-w-[340px] flex-col gap-3">
+          <div class="flex items-center gap-2.5">
+            <span class="grid size-7 place-items-center rounded-lg bg-[var(--color-accent)] text-sm font-bold text-white">
+              {marque.initiale}
+            </span>
+            <span class="text-[17px] font-bold tracking-[-0.4px] text-[var(--color-night-text)]">
+              {marque.nom}
+            </span>
+          </div>
+          <p class="text-sm leading-relaxed text-[var(--color-night-text)]">
+            {pied.baseline}
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-x-16 gap-y-8">
+          {
+            pied.colonnes.map((colonne) => (
+              <div class="flex w-[150px] flex-col gap-2.5">
+                <p class="text-[13px] font-bold text-[var(--color-night-text)]">
+                  {colonne.titre}
+                </p>
+                {colonne.liens.map((lien) =>
+                  lien.lien ? (
+                    <a
+                      href={lien.lien}
+                      class="text-sm text-[var(--color-night-text)] transition hover:underline"
+                    >
+                      {lien.libelle}
+                    </a>
+                  ) : (
+                    <span class="text-sm text-[var(--color-night-text)]">{lien.libelle}</span>
+                  ),
+                )}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="h-px w-full bg-[var(--color-night-text)] opacity-20"></div>
+
+      <p class="text-[13px] text-[var(--color-night-text)]">{pied.copyright}</p>
+    </div>
+  </footer>
+</Base>

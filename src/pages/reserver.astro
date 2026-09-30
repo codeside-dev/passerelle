@@ -1,0 +1,261 @@
+---
+import Vitrine from "../layouts/Vitrine.astro";
+import { cours } from "../data/cours";
+
+/* Les donnees dont le script a besoin pour le parcours simule. */
+const donnees = cours.map((c) => ({
+  slug: c.slug,
+  titre: c.titre,
+  professeur: c.professeur,
+  matiere: c.matiere,
+  niveau: c.niveau,
+  tarif: c.tarif,
+}));
+
+const creneaux = ["18h – 19h", "19h – 20h", "20h – 21h"];
+
+const etapes = ["Créneau", "Coordonnées", "Récapitulatif", "Confirmation"];
+---
+
+<Vitrine
+  title="Réserver un cours — Passerelle"
+  description="Choisissez un créneau, indiquez vos coordonnées, vérifiez le récapitulatif. Parcours de démonstration, aucun paiement."
+  actif="reserver"
+>
+  <script type="application/json" id="donnees-cours" set:html={JSON.stringify(donnees)} />
+
+  <section class="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-6 py-12 lg:px-[72px]">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <p class="flex items-center gap-2 text-sm">
+        <span class="font-semibold">Réservation</span>
+        <span aria-hidden="true" class="text-[var(--color-muted)]">·</span>
+        <span class="font-mono text-[13px] text-[var(--color-muted)]" data-etape-texte>étape 1 sur 4</span>
+      </p>
+      <p class="text-sm text-[var(--color-muted)]">
+        Besoin d'aide ? <span class="font-semibold text-[var(--color-ink)]">Nous écrire</span>
+      </p>
+    </div>
+
+    <div class="grid items-start gap-12 lg:grid-cols-[1fr_380px]">
+      <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-3">
+          <p class="font-mono text-xs font-semibold tracking-[1.2px] text-[var(--color-accent)]">RÉSERVATION</p>
+          <h1 class="font-display text-[30px] font-bold tracking-[-1.1px] sm:text-[36px]" data-titre-etape>
+            Choisissez un créneau
+          </h1>
+        </div>
+
+        <ol class="flex flex-wrap gap-x-8 gap-y-3" data-pistes>
+          {
+            etapes.map((etape, i) => (
+              <li class="flex items-center gap-2.5" data-piste={i + 1}>
+                <span
+                  class="grid size-7 place-items-center rounded-full font-mono text-[13px] font-semibold"
+                  data-puce
+                >
+                  {i + 1}
+                </span>
+                <span class="text-sm font-semibold" data-libelle>{etape}</span>
+              </li>
+            ))
+          }
+        </ol>
+
+        <!-- Étape 1 : le créneau -->
+        <div class="flex flex-col gap-4" data-panneau="1">
+          <p class="text-base font-bold">Mardi 14 octobre</p>
+          <div class="flex flex-col gap-2.5">
+            {
+              creneaux.map((creneau, i) => (
+                <button
+                  type="button"
+                  class="flex items-center justify-between rounded-xl border border-[var(--color-line)] px-5 py-4 text-left transition aria-pressed:border-[var(--color-accent)] aria-pressed:bg-[var(--color-alt)]"
+                  data-creneau={creneau}
+                  aria-pressed={i === 0 ? "true" : "false"}
+                >
+                  <span class="font-mono text-[15px] font-semibold">{creneau}</span>
+                  <span class="text-[13px] text-[var(--color-muted)]" data-etat-creneau>
+                    {i === 0 ? "Choisi" : "Libre"}
+                  </span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Étape 2 : les coordonnées -->
+        <div class="hidden flex-col gap-4" data-panneau="2">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="flex flex-col gap-1.5">
+              <span class="font-mono text-[11px] font-semibold uppercase tracking-[1px] text-[var(--color-muted)]">Nom et prénom</span>
+              <input type="text" data-champ="nom" class="rounded-[10px] border border-[var(--color-line)] px-3.5 py-2.5 text-sm" />
+            </label>
+            <label class="flex flex-col gap-1.5">
+              <span class="font-mono text-[11px] font-semibold uppercase tracking-[1px] text-[var(--color-muted)]">Adresse électronique</span>
+              <input type="email" data-champ="courriel" class="rounded-[10px] border border-[var(--color-line)] px-3.5 py-2.5 text-sm" />
+            </label>
+          </div>
+          <label class="flex flex-col gap-1.5">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-[1px] text-[var(--color-muted)]">Classe de l'élève</span>
+            <input type="text" data-champ="classe" placeholder="Exemple : Seconde" class="rounded-[10px] border border-[var(--color-line)] px-3.5 py-2.5 text-sm" />
+          </label>
+          <p class="text-[13px] leading-[1.5] text-[var(--color-muted)]">
+            Ces informations ne sont pas enregistrées : la démonstration ne conserve rien.
+          </p>
+        </div>
+
+        <!-- Étape 3 : le récapitulatif -->
+        <div class="hidden flex-col gap-4" data-panneau="3">
+          <dl class="flex flex-col gap-2.5 rounded-xl border border-[var(--color-line)] bg-[var(--color-alt)] p-5">
+            <div class="flex items-center justify-between"><dt class="text-sm text-[var(--color-muted)]">Cours</dt><dd class="text-sm font-semibold" data-recap="cours">—</dd></div>
+            <div class="flex items-center justify-between"><dt class="text-sm text-[var(--color-muted)]">Professeur</dt><dd class="text-sm font-semibold" data-recap="professeur">—</dd></div>
+            <div class="flex items-center justify-between"><dt class="text-sm text-[var(--color-muted)]">Date</dt><dd class="text-sm font-semibold">Mardi 14 octobre</dd></div>
+            <div class="flex items-center justify-between"><dt class="text-sm text-[var(--color-muted)]">Horaire</dt><dd class="font-mono text-sm font-semibold" data-recap="creneau">—</dd></div>
+            <div class="flex items-center justify-between"><dt class="text-sm text-[var(--color-muted)]">Élève</dt><dd class="text-sm font-semibold" data-recap="eleve">—</dd></div>
+          </dl>
+          <p class="rounded-xl border border-[#E4E1F5] bg-[var(--color-accent-pale)] p-4 text-sm leading-relaxed text-[var(--color-ink)]">
+            <strong>Aucun paiement à cette étape.</strong> Cette page est une démonstration : aucune réservation n'est enregistrée et aucune somme n'est prélevée.
+          </p>
+        </div>
+
+        <!-- Étape 4 : la confirmation -->
+        <div class="hidden flex-col gap-3" data-panneau="4">
+          <p class="text-base font-bold">Demande envoyée — démonstration.</p>
+          <p class="max-w-[560px] text-base leading-relaxed text-[var(--color-muted)]">
+            Dans un vrai parcours, le professeur confirmerait le créneau sous quelques heures, puis le paiement serait demandé. Ici, rien n'a été transmis ni enregistré.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <button type="button" class="hidden text-[15px] font-semibold" data-retour>Retour</button>
+          <button type="button" class="rounded-[10px] bg-[var(--color-accent)] px-6 py-3.5 text-[15px] font-semibold text-white transition hover:brightness-110" data-suivant>
+            Continuer vers les coordonnées
+          </button>
+        </div>
+      </div>
+
+      <aside class="flex flex-col gap-4 rounded-[18px] border border-[var(--color-line)] bg-[var(--color-alt)] p-[26px]">
+        <p class="font-mono text-[11px] font-semibold tracking-[1.2px] text-[var(--color-muted)]">VOTRE COURS</p>
+        <h2 class="max-w-[344px] text-xl font-bold leading-snug tracking-[-0.5px]" data-cours-titre>—</h2>
+        <div class="flex flex-col gap-0.5">
+          <span class="text-sm font-bold" data-cours-professeur>—</span>
+          <span class="text-[13px] text-[var(--color-muted)]" data-cours-resume>—</span>
+        </div>
+        <dl class="flex flex-col gap-2.5 border-t border-[var(--color-line)] pt-4">
+          <div class="flex items-center justify-between"><dt class="text-sm text-[var(--color-muted)]">Date</dt><dd class="text-sm font-semibold">Mardi 14 octobre</dd></div>
+          <div class="flex items-center justify-between"><dt class="text-sm text-[var(--color-muted)]">Horaire</dt><dd class="font-mono text-sm font-semibold" data-horaire>—</dd></div>
+          <div class="flex items-center justify-between"><dt class="text-sm text-[var(--color-muted)]">Durée</dt><dd class="text-sm font-semibold">60 minutes</dd></div>
+          <div class="flex items-center justify-between pt-2"><dt class="text-base font-bold">Total</dt><dd class="text-2xl font-bold tracking-[-0.6px]" data-total>—</dd></div>
+        </dl>
+        <p class="text-[13px] leading-[1.5] text-[var(--color-muted)]">
+          Aucun paiement à cette étape : la maquette simule le parcours.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <script>
+    const donnees = JSON.parse(
+      document.getElementById("donnees-cours")?.textContent ?? "[]",
+    );
+    const parametres = new URLSearchParams(location.search);
+    const choisi =
+      donnees.find((c: { slug: string }) => c.slug === parametres.get("cours")) ??
+      donnees[0];
+
+    let etape = 1;
+    let creneau = "18h – 19h";
+
+    const $ = (sel: string) => document.querySelector<HTMLElement>(sel);
+    const tous = (sel: string) =>
+      Array.from(document.querySelectorAll<HTMLElement>(sel));
+
+    const titres = [
+      "Choisissez un créneau",
+      "Vos coordonnées",
+      "Vérifiez le récapitulatif",
+      "Demande envoyée",
+    ];
+    const boutons = [
+      "Continuer vers les coordonnées",
+      "Continuer vers le récapitulatif",
+      "Confirmer la demande",
+      "Terminer",
+    ];
+
+    /* Le cours choisi vient du parametre d'URL : la fiche pointe ici. */
+    if (choisi) {
+      $("[data-cours-titre]")!.textContent = choisi.titre;
+      $("[data-cours-professeur]")!.textContent = choisi.professeur;
+      $("[data-cours-resume]")!.textContent = `${choisi.matiere} · ${choisi.niveau}`;
+      $("[data-total]")!.textContent = `${choisi.tarif} €`;
+      $("[data-recap='cours']")!.textContent = choisi.titre;
+      $("[data-recap='professeur']")!.textContent = choisi.professeur;
+    }
+    $("[data-horaire]")!.textContent = creneau;
+    $("[data-recap='creneau']")!.textContent = creneau;
+
+    /* Choix du creneau : l'etat actif est porte par aria-pressed. */
+    tous("[data-creneau]").forEach((bouton) => {
+      bouton.addEventListener("click", () => {
+        tous("[data-creneau]").forEach((autre) => {
+          autre.setAttribute("aria-pressed", String(autre === bouton));
+          autre.querySelector("[data-etat-creneau]")!.textContent =
+            autre === bouton ? "Choisi" : "Libre";
+        });
+        creneau = bouton.dataset.creneau ?? creneau;
+        $("[data-horaire]")!.textContent = creneau;
+        $("[data-recap='creneau']")!.textContent = creneau;
+      });
+    });
+
+    function afficher() {
+      tous("[data-panneau]").forEach((panneau) => {
+        panneau.classList.toggle("hidden", panneau.dataset.panneau !== String(etape));
+        panneau.classList.toggle("flex", panneau.dataset.panneau === String(etape));
+      });
+      tous("[data-piste]").forEach((piste) => {
+        const numero = Number(piste.dataset.piste);
+        const actif = numero === etape;
+        const fait = numero < etape;
+        piste.querySelector("[data-puce]")!.className =
+          "grid size-7 place-items-center rounded-full font-mono text-[13px] font-semibold " +
+          (actif || fait
+            ? "bg-[var(--color-accent)] text-white"
+            : "border border-[var(--color-line)] text-[var(--color-muted)]");
+        const libelle = piste.querySelector("[data-libelle]")!;
+        libelle.className =
+          "text-sm " + (actif ? "font-bold" : "font-semibold text-[var(--color-muted)]");
+      });
+
+      $("[data-titre-etape]")!.textContent = titres[etape - 1];
+      $("[data-etape-texte]")!.textContent = `étape ${etape} sur 4`;
+      $("[data-suivant]")!.textContent = boutons[etape - 1];
+      $("[data-retour]")!.classList.toggle("hidden", etape === 1);
+      $("[data-suivant]")!.classList.toggle(
+        "hidden",
+        etape === 4,
+      );
+
+      if (etape >= 3) {
+        const eleve = document.querySelector<HTMLInputElement>("[data-champ='nom']")?.value;
+        $("[data-recap='eleve']")!.textContent = eleve?.trim() || "Non renseigné";
+      }
+    }
+
+    $("[data-suivant]")!.addEventListener("click", () => {
+      if (etape < 4) {
+        etape += 1;
+        afficher();
+      }
+    });
+    $("[data-retour]")!.addEventListener("click", () => {
+      if (etape > 1) {
+        etape -= 1;
+        afficher();
+      }
+    });
+
+    afficher();
+  </script>
+</Vitrine>

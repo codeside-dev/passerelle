@@ -1,0 +1,141 @@
+---
+import Vitrine from "../layouts/Vitrine.astro";
+import CarteProfesseur from "../components/CarteProfesseur.astro";
+import { cours, filieres, niveaux } from "../data/cours";
+
+/* Le tarif le plus eleve est 42 € : deux paliers suffisent a couvrir l'offre. */
+const paliers = [
+  { slug: "tout", label: "Tous les prix" },
+  { slug: "30", label: "Jusqu'à 30 €" },
+  { slug: "40", label: "Jusqu'à 40 €" },
+];
+
+const champ =
+  "w-full appearance-none rounded-[10px] border border-[var(--color-line)] bg-[var(--color-fond)] px-3.5 py-2.5 text-sm font-semibold text-[var(--color-ink)]";
+const etiquette = "font-mono text-[11px] font-semibold uppercase tracking-[1px] text-[var(--color-muted)]";
+---
+
+<Vitrine
+  title="Tous les cours — Passerelle"
+  description="1 200 professeurs vérifiés, du collège au lycée. Filtrez par matière, niveau et budget."
+  actif="cours"
+>
+  <section class="mx-auto flex w-full max-w-[1440px] flex-col gap-3 px-6 pt-14 pb-7 lg:px-[72px]">
+    <nav aria-label="Fil d'Ariane">
+      <ol class="flex flex-wrap items-center gap-2 text-[13px] text-[var(--color-muted)]">
+        <li><a href="/" class="transition hover:text-[var(--color-ink)]">Accueil</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page" class="text-[var(--color-ink)]">Cours</li>
+      </ol>
+    </nav>
+    <h1 class="font-display text-[34px] font-bold tracking-[-1.4px] sm:text-[44px]">Tous les cours</h1>
+    <p class="max-w-[700px] text-base leading-[1.55] text-[var(--color-muted)]">
+      1 200 professeurs vérifiés, du collège au lycée. Filtrez par matière, niveau et budget.
+    </p>
+  </section>
+
+  <section
+    class="mx-auto w-full max-w-[1440px] px-6 pb-8 lg:px-[72px]"
+    aria-label="Filtres"
+  >
+    <div class="grid gap-4 rounded-2xl border border-[var(--color-line)] bg-[var(--color-alt)] p-5 lg:grid-cols-4">
+      <div class="flex flex-col gap-1.5 lg:col-span-1">
+        <label for="recherche" class={etiquette}>Recherche</label>
+        <input
+          id="recherche"
+          type="search"
+          placeholder="Matière, professeur, niveau…"
+          class={champ}
+          data-recherche
+        />
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="filtre-matiere" class={etiquette}>Matière</label>
+        <select id="filtre-matiere" class={champ} data-filtre="matiere">
+          {filieres.map((f) => <option value={f.slug}>{f.label}</option>)}
+        </select>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="filtre-niveau" class={etiquette}>Niveau</label>
+        <select id="filtre-niveau" class={champ} data-filtre="niveau">
+          {niveaux.map((n) => <option value={n.slug}>{n.label}</option>)}
+        </select>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="filtre-prix" class={etiquette}>Prix</label>
+        <select id="filtre-prix" class={champ} data-filtre="prix">
+          {paliers.map((p) => <option value={p.slug}>{p.label}</option>)}
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section id="professeurs" class="mx-auto w-full max-w-[1440px] px-6 pb-24 lg:px-[72px]">
+    <p class="mb-6 text-sm text-[var(--color-muted)]" data-compteur aria-live="polite">
+      {cours.length} cours
+    </p>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-grille>
+      {
+        cours.map((c) => (
+          <div
+            data-carte
+            data-matiere={c.matiereSlug}
+            data-niveau={c.niveauSlug}
+            data-tarif={c.tarif}
+            data-recherche={`${c.professeur} ${c.matiere} ${c.niveau}`.toLowerCase()}
+          >
+            <CarteProfesseur cours={c} hauteurBandeau="h-[200px]" />
+          </div>
+        ))
+      }
+    </div>
+
+    <p data-vide hidden class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-alt)] p-8 text-center text-[var(--color-muted)]">
+      Aucun cours ne correspond à ces critères. Élargissez la matière ou le niveau.
+    </p>
+  </section>
+
+  <script>
+    const cartes = Array.from(document.querySelectorAll<HTMLElement>("[data-carte]"));
+    const compteur = document.querySelector<HTMLElement>("[data-compteur]");
+    const vide = document.querySelector<HTMLElement>("[data-vide]");
+    const recherche = document.querySelector<HTMLInputElement>("[data-recherche]");
+    const selects = Array.from(document.querySelectorAll<HTMLSelectElement>("[data-filtre]"));
+
+    const valeur = (nom: string) =>
+      selects.find((s) => s.dataset.filtre === nom)?.value ?? "tout";
+
+    function appliquer() {
+      const texte = (recherche?.value ?? "").trim().toLowerCase();
+      const matiere = valeur("matiere");
+      const niveau = valeur("niveau");
+      const prix = valeur("prix");
+
+      let visibles = 0;
+      cartes.forEach((carte) => {
+        const okMatiere = matiere === "tout" || carte.dataset.matiere === matiere;
+        const okNiveau = niveau === "tout" || carte.dataset.niveau === niveau;
+        const okPrix = prix === "tout" || Number(carte.dataset.tarif) <= Number(prix);
+        const okTexte = texte === "" || (carte.dataset.recherche ?? "").includes(texte);
+        const ok = okMatiere && okNiveau && okPrix && okTexte;
+        carte.hidden = !ok;
+        if (ok) visibles += 1;
+      });
+
+      if (compteur) {
+        compteur.textContent =
+          visibles === cartes.length
+            ? `${cartes.length} cours`
+            : `${visibles} cours sur ${cartes.length}`;
+      }
+      if (vide) vide.hidden = visibles > 0;
+    }
+
+    recherche?.addEventListener("input", appliquer);
+    selects.forEach((s) => s.addEventListener("change", appliquer));
+  </script>
+</Vitrine>

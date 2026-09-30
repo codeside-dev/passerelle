@@ -1,0 +1,57 @@
+[
+  {
+    "slot": "heros",
+    "query": "students studying together library table",
+    "title": "Допомога університетам",
+    "creator": "EU-Ukraine cooperation",
+    "license": "BY-SA 2.0",
+    "source": "https://www.flickr.com/photos/149400054@N04/54241738071",
+    "via": "Openverse",
+    "file": "heros.png",
+    "fichier": "heros.jpg"
+  },
+  {
+    "slot": "fiche",
+    "query": "chalkboard mathematics equations",
+    "title": "doing math at Stony Brook",
+    "creator": "BryanAlexander",
+    "license": "BY 2.0",
+    "source": "https://www.flickr.com/photos/36521954815@N01/17182506391",
+    "via": "Openverse",
+    "file": "fiche.png",
+    "fichier": "fiche.jpg"
+  },
+  {
+    "slot": "labo",
+    "query": "science classroom experiment",
+    "title": "RDECOM Scientist and Engineers bring their special skills and enthusiasm to STEM Night at Fallston Middle School",
+    "creator": "U.S. Army Combat Capabilities Development Command",
+    "license": "BY 2.0",
+    "source": "https://www.flickr.com/photos/34402227@N03/7029136839",
+    "via": "Openverse",
+    "file": "similaire1.png",
+    "fichier": "labo.jpg"
+  },
+  {
+    "slot": "geometrie",
+    "query": "geometry mathematics drawing",
+    "title": "Mathematical compass, geometry drawing tool",
+    "creator": null,
+    "license": "CC0 1.0",
+    "source": "https://www.rawpixel.com/image/6258123/image-vintage-public-domain-art",
+    "via": "Openverse",
+    "file": "similaire2.png",
+    "fichier": "geometrie.jpg"
+  },
+  {
+    "slot": "livre",
+    "query": "open books literature reading",
+    "title": "Open book",
+    "creator": "freestocks.org",
+    "license": "CC0 1.0",
+    "source": "https://www.flickr.com/photos/135396164@N05/26421751605",
+    "via": "Openverse",
+    "file": "similaire3.png",
+    "fichier": "livre.jpg"
+  }
+]

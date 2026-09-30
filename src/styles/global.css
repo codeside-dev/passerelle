@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/*
+ * Jetons repris du fichier .pen de Passerelle.
+ * Le violet est reserve aux actions : boutons, liens d'action, prix mis en
+ * avant. Il ne decore rien — c'est la regle du guide pen.dev.
+ */
+:root {
+  --color-fond: #ffffff;
+  --color-alt: #f6f5ff;
+  --color-ink: #16123a;
+  --color-muted: #6b6890;
+  --color-accent: #5b3df5;
+  --color-accent-pale: #ede9fe;
+  --color-line: #e4e1f5;
+  --color-night-text: #e9e7f7;
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  /* Piles de polices en classes, jamais en variables. */
+  .font-display {
+    font-family: "Inter", system-ui, sans-serif;
+  }
+  .font-body {
+    font-family: "Inter", system-ui, sans-serif;
+  }
+  .font-mono {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+  }
+}

@@ -1,0 +1,52 @@
+---
+import { Image } from "astro:assets";
+import type { Cours } from "../data/cours";
+
+interface Props {
+  cours: Cours;
+  /** Hauteur de l'image : 280 sur l'accueil, 200 sur la liste. */
+  hauteurPhoto?: string;
+}
+
+const { cours, hauteurPhoto = "h-[200px]" } = Astro.props;
+---
+
+<article class="relative flex h-full flex-col overflow-hidden rounded-[18px] border border-[var(--color-line)] bg-[var(--color-fond)]">
+  <div class="bg-[var(--color-alt)]">
+    <Image
+      src={cours.photo}
+      alt=""
+      widths={[420, 640, 840]}
+      sizes="(min-width: 1024px) 400px, (min-width: 640px) 45vw, 90vw"
+      class={`w-full object-cover ${hauteurPhoto}`}
+      loading="lazy"
+    />
+  </div>
+
+  <div class="flex flex-1 flex-col gap-2 p-[22px]">
+    <p class="font-mono text-[13px] font-semibold text-[var(--color-accent)]">
+      {cours.matiere}
+    </p>
+    <h3 class="text-[18px] font-bold leading-snug tracking-[-0.4px]">
+      <a
+        href={`/cours/${cours.slug}`}
+        class="after:absolute after:inset-0 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+      >
+        {cours.professeur}
+      </a>
+    </h3>
+    <p class="text-[13px] text-[var(--color-muted)]">{cours.niveau}</p>
+  </div>
+
+  <div class="mt-auto flex items-center justify-between gap-4 px-[22px] pb-[24px]">
+    <div class="flex flex-col gap-1">
+      <span class="font-mono text-xs text-[var(--color-muted)]">
+        {cours.note} ★ · {cours.avis} avis
+      </span>
+      <span class="text-[17px] font-bold">{cours.tarif} € / h</span>
+    </div>
+    <span class="relative z-10 rounded-lg bg-[var(--color-accent)] px-4 py-2 text-[13px] font-semibold text-white">
+      Voir le cours
+    </span>
+  </div>
+</article>

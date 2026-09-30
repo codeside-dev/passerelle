@@ -1,0 +1,136 @@
+---
+import { Image } from "astro:assets";
+import Vitrine from "../../layouts/Vitrine.astro";
+import { cours, coursParSlug, coursSimilaires } from "../../data/cours";
+
+export function getStaticPaths() {
+  return cours.map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+
+const { c } = Astro.props;
+const similaires = coursSimilaires(c.slug);
+---
+
+<Vitrine title={`${c.titre} — Passerelle`} description={c.description} actif="cours">
+  <div class="mx-auto w-full max-w-[1440px] px-6 pt-10 lg:px-[72px]">
+    <nav aria-label="Fil d'Ariane">
+      <ol class="flex flex-wrap items-center gap-2 text-[13px] text-[var(--color-muted)]">
+        <li><a href="/" class="transition hover:text-[var(--color-ink)]">Accueil</a></li>
+        <li aria-hidden="true">›</li>
+        <li><a href="/cours" class="transition hover:text-[var(--color-ink)]">Cours</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page" class="font-semibold text-[var(--color-ink)]">
+          {c.matiere} · {c.niveau}
+        </li>
+      </ol>
+    </nav>
+  </div>
+
+  <section class="mx-auto grid w-full max-w-[1440px] items-start gap-14 px-6 py-12 lg:grid-cols-[1fr_380px] lg:px-[72px]">
+    <div class="flex flex-col gap-6">
+      <p class="font-mono text-xs font-semibold tracking-[1.2px] text-[var(--color-accent)]">
+        {c.matiere.toUpperCase()} · {c.niveau.toUpperCase()}
+      </p>
+      <h1 class="max-w-[660px] font-display text-[32px] font-bold leading-[1.15] tracking-[-1.1px] sm:text-[36px]">
+        {c.titre}
+      </h1>
+
+      <div class="flex flex-col gap-1">
+        <span class="text-[15px] font-bold">{c.professeur}</span>
+        <span class="text-[13px] text-[var(--color-muted)]">
+          {c.note} ★ · {c.avis} avis · {c.repond}
+        </span>
+      </div>
+
+      <Image
+        src={c.photo}
+        alt={`${c.matiere} · ${c.niveau}`}
+        widths={[640, 960, 1280]}
+        sizes="(min-width: 1024px) 700px, 90vw"
+        class="h-[260px] w-full rounded-[18px] object-cover sm:h-[340px]"
+      />
+
+      <p class="max-w-[660px] text-base leading-[1.6] text-[var(--color-muted)]">
+        {c.description}
+      </p>
+
+      <h2 class="mt-4 font-display text-2xl font-bold tracking-[-0.6px]">
+        Ce que l'élève va travailler
+      </h2>
+      <ol class="flex flex-col gap-3">
+        {
+          c.objectifs.map((objectif, i) => (
+            <li class="flex gap-3">
+              <span class="font-mono text-[11px] font-semibold text-[var(--color-accent)]">
+                {i + 1}
+              </span>
+              <span class="text-base text-[var(--color-muted)]">{objectif}</span>
+            </li>
+          ))
+        }
+      </ol>
+
+      <h2 class="mt-4 font-display text-2xl font-bold tracking-[-0.6px]">
+        Disponibilités proposées
+      </h2>
+      <p class="text-[15px] text-[var(--color-muted)]">
+        Fuseau horaire de Paris. Chaque créneau dure une heure.
+      </p>
+      <ul class="flex flex-wrap gap-2.5">
+        {
+          c.creneaux.map((creneau) => (
+            <li class="rounded-[10px] border border-[var(--color-line)] bg-[var(--color-alt)] px-4 py-2.5 font-mono text-[13px]">
+              {creneau}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <aside class="flex flex-col gap-4 rounded-[18px] border border-[var(--color-line)] bg-[var(--color-alt)] p-[26px]">
+      <span class="text-[30px] font-bold tracking-[-0.9px]">{c.tarif} € / heure</span>
+      <p class="text-[15px] leading-[1.55] text-[var(--color-muted)]">
+        Cours particulier de 60 minutes, en visioconférence, avec {c.professeur}.
+      </p>
+      <div class="flex flex-col gap-3 border-t border-[var(--color-line)] pt-4">
+        <span class="text-sm font-semibold">Premier cours satisfait ou remboursé</span>
+        <p class="text-sm leading-[1.5] text-[var(--color-muted)]">
+          Annulation gratuite jusqu'à 24 h avant le cours.
+        </p>
+      </div>
+      <a
+        href={`/reserver?cours=${c.slug}`}
+        class="rounded-[10px] bg-[var(--color-accent)] px-6 py-3.5 text-center text-base font-semibold text-white transition hover:brightness-110"
+      >
+        Réserver ce cours
+      </a>
+    </aside>
+  </section>
+
+  <section class="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-6 pb-24 lg:px-[72px]">
+    <h2 class="font-display text-[28px] font-bold tracking-[-0.9px] sm:text-[32px]">Cours similaires</h2>
+    <div class="grid gap-6 md:grid-cols-3">
+      {
+        similaires.map((s) => (
+          <article class="relative flex flex-col gap-2 rounded-[18px] border border-[var(--color-line)] p-[22px]">
+            <p class="font-mono text-[11px] font-semibold tracking-[1px] text-[var(--color-accent)]">
+              {s.matiere.toUpperCase()}
+            </p>
+            <h3 class="max-w-[340px] text-[18px] font-bold leading-snug tracking-[-0.4px]">
+              <a
+                href={`/cours/${s.slug}`}
+                class="after:absolute after:inset-0 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+              >
+                {s.titre}
+              </a>
+            </h3>
+            <p class="text-[13px] text-[var(--color-muted)]">
+              {s.professeur} · {s.niveau}
+            </p>
+            <p class="mt-auto pt-2 text-base font-bold">{s.tarif} € / h</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</Vitrine>

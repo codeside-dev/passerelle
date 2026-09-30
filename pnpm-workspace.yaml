@@ -1,0 +1,6 @@
+# pnpm 11+ refuse par defaut les scripts d'installation des dependances et
+# echoue (ERR_PNPM_IGNORED_BUILDS) au lieu d'un simple avertissement.
+# esbuild est requis par Vite/Astro, sharp par l'optimisation d'images.
+allowBuilds:
+  esbuild: true
+  sharp: true
